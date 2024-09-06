@@ -62,4 +62,35 @@ test.describe('saucedemo cart tests', () => {
     await page.locator('.shopping_cart_link').click()
     await expect(page.locator('[data-test="item-quantity"]')).toHaveText('1')
   })
+
+  test('add backpack and remove it from cart', async ({ page }) => {
+    await page.locator('#add-to-cart-sauce-labs-backpack').click()
+    await page.locator('.shopping_cart_link').click()
+    await expect(page.locator('[data-test="item-quantity"]')).toHaveText('1')
+    await page.locator('[data-test="remove-sauce-labs-backpack"]').click()
+    await expect(page.locator('.removed_cart_item')).toBeDefined()
+  })
+
+  test('checkout happy path', async ({ page }) => {
+    await page.locator('#add-to-cart-sauce-labs-backpack').click()
+    await page.locator('.shopping_cart_link').click()
+    await expect(page.locator('[data-test="item-quantity"]')).toHaveText('1')
+    await page.locator('#checkout').click()
+    await expect(page.locator('[data-test="title"]')).toContainText(
+      'Checkout: Your Information'
+    )
+    await page.locator('#first-name').fill('Vanilla')
+    await page.locator('#last-name').fill('Ice')
+    await page.locator('#postal-code').fill('90210')
+    await page.locator('#continue').click()
+    await expect(page.locator('[data-test="title"]')).toContainText(
+      'Checkout: Overview'
+    )
+    await page.locator('#finish').click()
+    await expect(page.locator('.complete-header')).toContainText(
+      'Thank you for your order!'
+    )
+    await page.locator('#back-to-products').click()
+    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html')
+  })
 })
