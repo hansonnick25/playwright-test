@@ -47,3 +47,19 @@ test.describe('saucedemo login tests', () => {
     }
   })
 })
+
+test.describe('saucedemo cart tests', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('https://www.saucedemo.com')
+    await page.locator('#user-name').fill('standard_user')
+    await page.locator('#password').fill('secret_sauce')
+    await page.locator('#login-button').click()
+    await expect(page.locator('#add-to-cart-sauce-labs-backpack')).toBeVisible()
+  })
+
+  test('add a backpack to cart', async ({ page }) => {
+    await page.locator('#add-to-cart-sauce-labs-backpack').click()
+    await page.locator('.shopping_cart_link').click()
+    await expect(page.locator('[data-test="item-quantity"]')).toHaveText('1')
+  })
+})
