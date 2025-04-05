@@ -9,7 +9,7 @@ test.describe('saucedemo tests', () => {
 
     test('has title', async ({ page }) => {
       await expect(page).toHaveTitle(/Swag Labs/)
-    })g
+    })
 
     test('standard user login', async ({ page }) => {
       await page.locator('#user-name').fill('standard_user')
